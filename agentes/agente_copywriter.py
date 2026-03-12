@@ -25,7 +25,7 @@ Crie conteúdo de marketing contendo:
 3. Textos de anúncio
 - pelo menos 2 ad copies
 
-Seja criativo e persuasivo.
+Seja criativo e persuasivo, mas não muito longo.
 """
 
     resposta = llm.invoke(prompt)
