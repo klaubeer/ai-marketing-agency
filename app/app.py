@@ -39,15 +39,15 @@ def gerar_pdf(texto):
 # Configuração da página
 # -----------------------------
 st.set_page_config(
-    page_title="AI Marketing Agency",
+    page_title="Agência de Marketing com IA",
     page_icon="🚀",
     layout="centered"
 )
 
-st.title("🚀 AI Marketing Agency")
+st.title("🚀 Agência de Marketing com IA")
 
 st.write(
-    "Multi-agent system that automatically generates marketing campaigns."
+    "Sistema multi-agente que gera campanhas completas de marketing automaticamente."
 )
 
 st.divider()
@@ -67,18 +67,18 @@ if "produto" not in st.session_state:
 # Input do usuário
 # -----------------------------
 produto = st.text_input(
-    "Product or service",
-    placeholder="Ex: gaming keyboard"
+    "Digite o produto ou serviço",
+    placeholder="Ex: teclado gamer"
 )
 
 
 # -----------------------------
 # Gerar campanha
 # -----------------------------
-if st.button("Generate campaign"):
+if st.button("Gerar campanha"):
 
     if not produto:
-        st.warning("Enter a product.")
+        st.warning("Digite um produto ou serviço.")
         st.stop()
 
     st.session_state.produto = produto
@@ -96,12 +96,11 @@ if st.button("Generate campaign"):
     grafo = construir_grafo()
 
     logs = []
-
     resultado_final = {}
 
-    with st.spinner("🤖 AI agents working..."):
+    with st.spinner("🤖 Agentes de IA trabalhando..."):
 
-        with st.expander("Agent logs", expanded=False):
+        with st.expander("Logs dos agentes", expanded=False):
 
             log_container = st.empty()
 
@@ -111,19 +110,19 @@ if st.button("Generate campaign"):
                 dados = passo[node]
 
                 if node == "pesquisa":
-                    logs.append("🔎 Research agent analyzing market...")
+                    logs.append("🔎 Agente de Pesquisa analisando o mercado...")
 
                 elif node == "estrategia":
-                    logs.append("📊 Strategy agent creating campaign strategy...")
+                    logs.append("📊 Agente de Estratégia definindo posicionamento da campanha...")
 
                 elif node == "copywriter":
-                    logs.append("✍️ Copywriter generating content...")
+                    logs.append("✍️ Copywriter gerando conteúdo da campanha...")
 
                 elif node == "diretor_criativo":
-                    logs.append("🎨 Creative director reviewing campaign...")
+                    logs.append("🎨 Diretor Criativo revisando e melhorando a campanha...")
 
                 elif node == "social":
-                    logs.append("📱 Social media agent optimizing content...")
+                    logs.append("📱 Agente de Social Media adaptando conteúdo para redes sociais...")
 
                 log_container.markdown("\n".join(logs))
 
@@ -139,24 +138,24 @@ if st.session_state.resultado:
 
     resultado = st.session_state.resultado
 
-    st.success("Campaign generated successfully")
+    st.success("✅ Campanha gerada com sucesso")
 
     st.metric(
-        "Tokens used",
+        "Tokens utilizados",
         resultado.get("tokens_usados", 0)
     )
 
     st.divider()
 
     # -----------------------------
-    # Tabs (mobile friendly)
+    # Abas (melhor para mobile)
     # -----------------------------
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "Research",
-        "Strategy",
-        "Copy",
-        "Creative Review",
-        "Social Media"
+        "Pesquisa de Mercado",
+        "Estratégia",
+        "Conteúdo",
+        "Revisão Criativa",
+        "Redes Sociais"
     ])
 
     with tab1:
@@ -198,26 +197,26 @@ if st.session_state.resultado:
         pdf = gerar_pdf(conteudo_final)
 
     # -----------------------------
-    # Botões exportação
+    # Botões de exportação
     # -----------------------------
-    st.subheader("Export campaign")
+    st.subheader("Exportar campanha")
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.download_button(
-            "⬇️ Download JSON",
+            "⬇️ Baixar JSON",
             data=json_data,
-            file_name="marketing_campaign.json",
+            file_name="campanha_marketing.json",
             mime="application/json"
         )
 
     with col2:
         if pdf:
             st.download_button(
-                "📄 Download PDF",
+                "📄 Baixar PDF",
                 data=pdf,
-                file_name="marketing_campaign.pdf",
+                file_name="campanha_marketing.pdf",
                 mime="application/pdf"
             )
 
@@ -226,10 +225,10 @@ if st.session_state.resultado:
     # -----------------------------
     # Copiar conteúdo
     # -----------------------------
-    st.subheader("Copy campaign content")
+    st.subheader("Copiar conteúdo da campanha")
 
     st.text_area(
-        "Campaign text",
+        "Texto da campanha",
         conteudo_final,
         height=250
     )
