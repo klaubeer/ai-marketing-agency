@@ -1,12 +1,10 @@
-EN version at the end.
+# AI Marketing Agency — Multi-Agent Marketing System
 
-# AI Marketing Agency — Sistema Multi-Agente
-
-Sistema multi-agente autônomo que simula uma agência de marketing para gerar campanhas completas utilizando agentes de IA.
+Sistema multi-agente que simula uma agência de marketing utilizando agentes de IA para gerar campanhas completas automaticamente.
 
 O sistema divide uma solicitação de marketing em tarefas executadas por diferentes agentes especializados, como pesquisa de mercado, estratégia, copywriting e adaptação para redes sociais.
 
-O projeto foi desenvolvido para demonstrar **orquestração de agentes, delegação de tarefas e workflows estruturados com LLMs**.
+O projeto foi desenvolvido para demonstrar **orquestração de agentes, workflows estruturados com LLMs e pipelines de geração de conteúdo com IA.**
 
 ---
 
@@ -15,144 +13,156 @@ O projeto foi desenvolvido para demonstrar **orquestração de agentes, delegaç
 Exemplo de entrada
 
 ```
-Crie uma campanha de marketing para o lançamento de um smartwatch fitness.
+Crie uma campanha de marketing para um teclado gamer
 ```
 
 Exemplo de saída
 
 ```
-Campaign Strategy
-Posicionar o smartwatch como um parceiro de performance e saúde para pessoas ativas.
+Pesquisa de Mercado
+Insights sobre o mercado de periféricos gamer e tendências.
 
-Target Audience
-Entusiastas de fitness entre 25–40 anos que monitoram treinos e métricas de saúde.
+Estratégia de Campanha
+Público-alvo, posicionamento e abordagem da campanha.
 
-Post Ideas
-1. "Seu treinador no pulso"
-2. "Acompanhe cada batimento do seu treino"
-3. "Treine de forma mais inteligente"
+Conteúdo de Marketing
+Ideias de posts, legendas e textos de anúncio.
 
-Captions
-Treine com mais inteligência. Conheça o smartwatch feito para performance.
-
-Hashtags
-#fitness #smartwatch #wearabletech #healthtech #trainingsmart
-
-Ad Copy
-Eleve seu treino com um smartwatch projetado para performance, recuperação e insights de saúde.
+Conteúdo Social
+Hashtags, ideias de posts e hooks para reels.
 ```
 
 ---
 
 # Arquitetura do Sistema
 
-O sistema simula o funcionamento de uma agência real, onde cada agente é responsável por uma etapa do processo de criação da campanha.
+O sistema funciona como um pipeline de agentes especializados.
+
+Cada agente executa uma tarefa e atualiza um **estado compartilhado da campanha**.
 
 ```
 User Input
      │
      ▼
-Creative Director Agent
-(planejamento de tarefas)
+Research Agent
      │
      ▼
- ┌───────────────┬───────────────┬───────────────┐
-Research Agent   Strategy Agent  Copywriter Agent
-        │               │               │
-        └───────────────┴───────────────┘
-                │
-        Social Media Agent
-                │
-             Output
+Strategy Agent
+     │
+     ▼
+Copywriter Agent
+     │
+     ▼
+Creative Director Agent
+     │
+     ▼
+Social Media Agent
+     │
+     ▼
+Final Campaign
 ```
+
+A orquestração dos agentes é feita utilizando **LangGraph**.
 
 ---
 
 # Agentes
 
-### Creative Director Agent
+## Research Agent
 
-Responsável por interpretar a solicitação do usuário e delegar tarefas para os agentes apropriados.
+Responsável por analisar o mercado e gerar insights sobre o produto.
 
-Responsabilidades:
+Funções
 
-* decomposição de tarefas
-* orquestração dos agentes
-* planejamento da campanha
-
----
-
-### Research Agent
-
-Coleta insights sobre produto, mercado, concorrentes e tendências.
-
-Saída estruturada
-
-```
-{
-  "market_insights": [],
-  "competitors": [],
-  "trends": []
-}
-```
-
-Demonstra:
-
-* uso de ferramentas
-* coleta de dados
 * análise de mercado
+* identificação de tendências
+* identificação de público
 
----
-
-### Strategy Agent
-
-Utiliza os insights da pesquisa para definir a direção estratégica da campanha.
-
-Saída estruturada
+Saída
 
 ```
 {
-  "target_audience": "",
-  "positioning": "",
-  "campaign_angle": "",
-  "channels": []
-}
-```
-
-Demonstra:
-
-* raciocínio estratégico
-* planejamento de campanha
-
----
-
-### Copywriter Agent
-
-Responsável pela geração de conteúdo de marketing baseado na estratégia.
-
-Saída estruturada
-
-```
-{
-  "post_ideas": [],
-  "captions": [],
-  "ad_copy": ""
+ "conteudo": "análise de mercado..."
 }
 ```
 
 ---
 
-### Social Media Agent
+## Strategy Agent
 
-Adapta o conteúdo da campanha para diferentes plataformas sociais.
+Cria a estratégia de marketing baseada na pesquisa.
 
-Saída estruturada
+Funções
+
+* definição de público-alvo
+* posicionamento da campanha
+* ângulo da campanha
+
+Saída
 
 ```
 {
-  "instagram_posts": [],
-  "tiktok_hooks": [],
-  "hashtags": []
+ "conteudo": "estratégia de marketing..."
+}
+```
+
+---
+
+## Copywriter Agent
+
+Responsável por gerar o conteúdo principal da campanha.
+
+Funções
+
+* ideias de posts
+* legendas
+* textos de anúncio
+
+Saída
+
+```
+{
+ "conteudo": "conteúdo da campanha..."
+}
+```
+
+---
+
+## Creative Director Agent
+
+Revisa e melhora o conteúdo criado pelo copywriter.
+
+Funções
+
+* revisão criativa
+* melhoria de linguagem
+* otimização de impacto
+
+Saída
+
+```
+{
+ "conteudo": "conteúdo revisado..."
+}
+```
+
+---
+
+## Social Media Agent
+
+Adapta o conteúdo para redes sociais.
+
+Funções
+
+* hashtags
+* ideias de posts
+* hooks para reels
+
+Saída
+
+```
+{
+ "conteudo": "conteúdo social..."
 }
 ```
 
@@ -160,50 +170,71 @@ Saída estruturada
 
 # Arquitetura Técnica
 
-O sistema é implementado utilizando um workflow baseado em grafos, onde cada agente funciona como um nó que recebe e atualiza um estado compartilhado.
-
-Fluxo simplificado
+O sistema utiliza um workflow baseado em grafos onde cada agente é um nó.
 
 ```
-Research → Strategy → Copywriter → Social Media
+Research → Strategy → Copywriter → Creative Director → Social Media
 ```
 
-Exemplo de estado compartilhado
+Todos os agentes compartilham um estado de campanha.
+
+Exemplo de estado
 
 ```
 CampaignState
 
-product
-research
-strategy
+produto
+pesquisa
+estrategia
 copy
+revisao
 social
+tokens_usados
 ```
 
-Cada agente atualiza o estado global conforme o workflow progride.
+Cada agente lê e atualiza esse estado.
 
 ---
 
-# Stack Tecnológica
+# Interface Web
 
-Principais tecnologias utilizadas no projeto
+O sistema possui uma interface construída com **Streamlit**.
+
+Funcionalidades
+
+* geração de campanha a partir de um produto
+* visualização das etapas da campanha
+* logs de execução dos agentes em tempo real
+* exportação da campanha
+
+Exportação disponível
+
+* JSON
+* PDF
+* copiar conteúdo
+
+---
+
+# Tech Stack
+
+Principais tecnologias utilizadas
 
 * Python
 * LangGraph
 * LangChain
 * OpenAI API
-* FastAPI
 * Streamlit
+* ReportLab
 
 Função de cada componente
 
-| Componente | Função                      |
-| ---------- | --------------------------- |
-| LangGraph  | Orquestração de agentes     |
-| LangChain  | Abstrações para agentes LLM |
-| OpenAI     | Modelo de linguagem         |
-| FastAPI    | API do sistema              |
-| Streamlit  | Interface para interação    |
+| Componente | Função                  |
+| ---------- | ----------------------- |
+| LangGraph  | Orquestração de agentes |
+| LangChain  | Integração com LLM      |
+| OpenAI     | Modelo de linguagem     |
+| Streamlit  | Interface web           |
+| ReportLab  | Geração de PDF          |
 
 ---
 
@@ -212,79 +243,31 @@ Função de cada componente
 ```
 ai-marketing-agency
 
-agents/
-   creative_director.py
-   research_agent.py
-   strategist_agent.py
-   copywriter_agent.py
-   social_media_agent.py
+agentes/
+   agente_pesquisa.py
+   agente_estrategia.py
+   agente_copywriter.py
+   diretor_criativo.py
+   agente_social_media.py
 
-orchestrator/
-   agent_graph.py
-   state.py
-
-tools/
-   web_search.py
+orquestrador/
+   grafo_agentes.py
+   estado_campanha.py
+   config_llm.py
 
 app/
-   api.py
-   ui.py
+   app.py
 
-tests/
-   test_agents.py
+outputs/
 
+teste.py
+requirements.txt
 README.md
 ```
 
 ---
 
-# Workflow do Sistema
-
-```
-User input
-   ↓
-Creative Director planeja tarefas
-   ↓
-Research Agent coleta insights
-   ↓
-Strategy Agent cria plano de campanha
-   ↓
-Copywriter gera conteúdo
-   ↓
-Social Media Agent adapta para redes sociais
-   ↓
-Campanha final
-```
-
----
-
-# O que este projeto demonstra
-
-Este projeto demonstra diversos conceitos importantes de engenharia de IA:
-
-* sistemas multi-agente
-* orquestração de agentes
-* delegação de tarefas
-* saídas estruturadas de LLM
-* integração com ferramentas externas
-* workflows baseados em grafos
-* arquitetura de sistemas de IA
-
----
-
-# Possíveis melhorias
-
-Evoluções futuras do projeto
-
-* análise automática de concorrentes
-* busca de dados de mercado em tempo real
-* geração de anúncios para múltiplas plataformas
-* memória entre campanhas
-* agente de avaliação de campanhas
-
----
-
-# Instalação
+# Execução
 
 Clone o repositório
 
@@ -294,352 +277,51 @@ git clone https://github.com/yourusername/ai-marketing-agency
 cd ai-marketing-agency
 ```
 
-Instale as dependências
+Instale dependências
 
 ```
 pip install -r requirements.txt
 ```
 
-Configure as variáveis de ambiente
+Configure variável de ambiente
 
 ```
 OPENAI_API_KEY=your_key
 ```
 
-Executar API
+Execute a interface
 
 ```
-uvicorn app.api:app --reload
+streamlit run app/app.py
 ```
 
-Executar interface
+Acesse
 
 ```
-streamlit run app/ui.py
-
-==================================================================================================
-
-Segue um **README forte para GitHub**. Direto, técnico e visual.
-
----
-
-# AI Marketing Agency — Multi-Agent System
-
-Autonomous multi-agent system that simulates a marketing agency to generate complete marketing campaigns using AI agents.
-
-The system decomposes a marketing request into specialized tasks executed by different agents such as research, strategy, copywriting, and social media optimization.
-
-Built to demonstrate **multi-agent orchestration, task delegation, and structured AI workflows** using modern LLM tooling.
-
----
-
-# Demo
-
-Example input
-
-```
-Create a marketing campaign for a new fitness smartwatch
-```
-
-Example output
-
-```
-Campaign Strategy
-Position the smartwatch as a performance and health companion for active professionals.
-
-Target Audience
-Fitness enthusiasts aged 25–40 who track workouts and health metrics.
-
-Post Ideas
-1. "Your coach on your wrist"
-2. "Track every heartbeat of your workout"
-3. "Smarter training starts here"
-
-Captions
-Train smarter, not harder. Meet the smartwatch built for performance.
-
-Hashtags
-#fitness #smartwatch #wearabletech #healthtech #trainingsmart
-
-Ad Copy
-Upgrade your training with a smartwatch designed for performance, recovery, and health insights.
+http://localhost:8501
 ```
 
 ---
 
-# System Architecture
+# O que este projeto demonstra
 
-The system simulates a real marketing agency where each AI agent is responsible for a specific role.
+Este projeto demonstra conceitos importantes de engenharia de IA:
 
-```
-User Input
-     │
-     ▼
-Creative Director Agent
-(task planning)
-     │
-     ▼
- ┌───────────────┬───────────────┬───────────────┐
-Research Agent   Strategy Agent  Copywriter Agent
-        │               │               │
-        └───────────────┴───────────────┘
-                │
-        Social Media Agent
-                │
-             Output
-```
+* sistemas multi-agente
+* orquestração de agentes
+* workflows com LLM
+* pipelines de geração de conteúdo
+* estado compartilhado entre agentes
+* interfaces de demonstração para sistemas de IA
 
 ---
 
-# Agents
-
-### Creative Director Agent
-
-Responsible for interpreting the user's request and delegating tasks to the appropriate agents.
-
-Responsibilities
-
-* task decomposition
-* agent orchestration
-* campaign planning
-
----
-
-### Research Agent
-
-Collects insights about the product, market, competitors, and trends.
-
-Outputs
-
-```
-{
-  "market_insights": [],
-  "competitors": [],
-  "trends": []
-}
-```
-
-Demonstrates
-
-* tool usage
-* information retrieval
-* market analysis
-
----
-
-### Strategy Agent
-
-Uses research insights to define the campaign direction.
-
-Outputs
-
-```
-{
-  "target_audience": "",
-  "positioning": "",
-  "campaign_angle": "",
-  "channels": []
-}
-```
-
-Demonstrates
-
-* reasoning
-* strategic planning
-
----
-
-### Copywriter Agent
-
-Generates marketing content based on the strategy.
-
-Outputs
-
-```
-{
-  "post_ideas": [],
-  "captions": [],
-  "ad_copy": ""
-}
-```
-
----
-
-### Social Media Agent
-
-Adapts the campaign for social media platforms.
-
-Outputs
-
-```
-{
-  "instagram_posts": [],
-  "tiktok_hooks": [],
-  "hashtags": []
-}
-```
-
----
-
-# Technical Architecture
-
-The system is implemented using a graph-based workflow where agents operate as nodes that pass state between each other.
-
-```
-Research → Strategy → Copywriter → Social Media
-```
-
-Shared state example
-
-```
-CampaignState
-
-product
-research
-strategy
-copy
-social
-```
-
-Each agent updates the global state as the workflow progresses.
-
----
-
-# Tech Stack
-
-Core technologies used in this project
-
-* Python
-* LangGraph
-* LangChain
-* OpenAI API
-* FastAPI
-* Streamlit
-
-Purpose of each component
-
-| Component | Role                      |
-| --------- | ------------------------- |
-| LangGraph | Multi-agent orchestration |
-| LangChain | LLM agent abstractions    |
-| OpenAI    | Language model            |
-| FastAPI   | API service               |
-| Streamlit | Simple UI for interaction |
-
----
-
-# Project Structure
-
-```
-ai-marketing-agency
-
-agents/
-   creative_director.py
-   research_agent.py
-   strategist_agent.py
-   copywriter_agent.py
-   social_media_agent.py
-
-orchestrator/
-   agent_graph.py
-   state.py
-
-tools/
-   web_search.py
-
-app/
-   api.py
-   ui.py
-
-tests/
-   test_agents.py
-
-README.md
-```
-
----
-
-# Example Workflow
-
-```
-User input
-   ↓
-Creative Director plans tasks
-   ↓
-Research Agent gathers insights
-   ↓
-Strategy Agent builds campaign plan
-   ↓
-Copywriter generates content
-   ↓
-Social Media Agent optimizes posts
-   ↓
-Final campaign output
-```
-
----
-
-# What This Project Demonstrates
-
-This project showcases several applied AI engineering concepts
-
-* Multi-agent systems
-* Agent orchestration
-* Task delegation
-* LLM structured outputs
-* Tool integration
-* Graph-based workflows
-* AI system architecture
-
----
-
-# Possible Extensions
-
-Future improvements
-
-* competitor analysis via web search
-* campaign performance simulation
-* multi-platform ad generation
-* memory between campaigns
-* campaign evaluation agent
-
----
-
-# Installation
-
-```
-git clone https://github.com/yourusername/ai-marketing-agency
-
-cd ai-marketing-agency
-
-pip install -r requirements.txt
-```
-
-Set environment variables
-
-```
-OPENAI_API_KEY=your_key
-```
-
-Run API
-
-```
-uvicorn app.api:app --reload
-```
-
-Run UI
-
-```
-streamlit run app/ui.py
-```
-
----
-
-# License
-
-
-
-```
-
-3️⃣ **agent logs visuais** que fazem parecer um sistema autônomo real.
-
+# Possíveis melhorias
+
+Evoluções futuras
+
+* busca de mercado em tempo real
+* análise automática de concorrentes
+* memória entre campanhas
+* avaliação automática de campanhas
+* integração com APIs de marketing
