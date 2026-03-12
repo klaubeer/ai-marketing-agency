@@ -1,45 +1,40 @@
-from langchain_openai import ChatOpenAI
 from orquestrador.estado_campanha import EstadoCampanha
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    temperature=0.7
-)
+from orquestrador.config_llm import llm
 
 
 def agente_social_media(estado: EstadoCampanha):
 
-    print("\n📱 [Social Media] Adaptando conteúdo para redes sociais...")
+    print("\n📱 [Social Media] Otimizando conteúdo...")
 
     copy = estado["copy"]["conteudo"]
 
     prompt = f"""
-Você é um especialista em social media.
+Você é especialista em social media.
 
-Com base no conteúdo abaixo:
-
+Conteúdo:
 {copy}
 
 Gere:
 
-1. Hashtags relevantes
-2. Sugestões de posts para Instagram
-3. Hooks curtos para TikTok ou Reels
-
-Foque em engajamento.
+1. hashtags
+2. ideias de posts instagram
+3. hooks para reels
 
 Limites:
-- máximo 5 tópicos por seção
+- máximo 5 hashtags
 - frases curtas
-- evite textos longos
 """
 
     resposta = llm.invoke(prompt)
+
+    tokens = resposta.response_metadata["token_usage"]["total_tokens"]
+
+    estado["tokens_usados"] += tokens
 
     estado["social"] = {
         "conteudo": resposta.content
     }
 
-    print("✅ [Social Media] Conteúdo otimizado para redes sociais")
+    print(f"✅ Conteúdo otimizado | tokens usados: {tokens}")
 
     return estado
