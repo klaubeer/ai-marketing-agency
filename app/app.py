@@ -3,6 +3,7 @@ import os
 import json
 import io
 
+# permite importar módulos da raiz do projeto
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import streamlit as st
@@ -13,13 +14,14 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 
 # -----------------------------
-# PDF
+# Gerar PDF
 # -----------------------------
 def gerar_pdf(texto):
 
     buffer = io.BytesIO()
 
     styles = getSampleStyleSheet()
+
     doc = SimpleDocTemplate(buffer)
 
     elementos = []
@@ -36,7 +38,7 @@ def gerar_pdf(texto):
 
 
 # -----------------------------
-# Page
+# Configuração da página
 # -----------------------------
 st.set_page_config(
     page_title="Agência de Marketing IA",
@@ -54,7 +56,7 @@ st.divider()
 
 
 # -----------------------------
-# Session state
+# Session State
 # -----------------------------
 if "resultado" not in st.session_state:
     st.session_state.resultado = None
@@ -64,7 +66,7 @@ if "produto" not in st.session_state:
 
 
 # -----------------------------
-# Input
+# Input do usuário
 # -----------------------------
 produto = st.text_input(
     "Digite o produto ou serviço",
@@ -73,7 +75,7 @@ produto = st.text_input(
 
 
 # -----------------------------
-# Botão gerar
+# Gerar campanha
 # -----------------------------
 if st.button("Gerar campanha"):
 
@@ -99,13 +101,14 @@ if st.button("Gerar campanha"):
 
     logs = []
 
-    with st.spinner("🤖 Agentes trabalhando..."):
+    resultado_final = {}
 
-        resultado_final = None
+    with st.spinner("🤖 Agentes trabalhando..."):
 
         for passo in grafo.stream(estado_inicial):
 
             node = list(passo.keys())[0]
+            dados = passo[node]
 
             if node == "pesquisa":
                 logs.append("🔎 Agente Pesquisa analisando mercado...")
@@ -124,7 +127,8 @@ if st.button("Gerar campanha"):
 
             log_container.markdown("\n".join(logs))
 
-            resultado_final = passo[node]
+            # acumula o estado completo
+            resultado_final.update(dados)
 
     st.session_state.resultado = resultado_final
 
@@ -160,7 +164,7 @@ if st.session_state.resultado:
 
     st.divider()
 
-    st.header("📱 Conteúdo Final")
+    st.header("📱 Conteúdo Final para Redes Sociais")
 
     conteudo_final = resultado.get("social", {}).get("conteudo", "")
 
@@ -170,12 +174,14 @@ if st.session_state.resultado:
 
     st.metric(
         "Tokens utilizados",
-        resultado["tokens_usados"]
+        resultado.get("tokens_usados", 0)
     )
 
     st.divider()
 
-    # JSON
+    # -----------------------------
+    # Exportar JSON
+    # -----------------------------
     campanha = {
         "produto": st.session_state.produto,
         "pesquisa": resultado.get("pesquisa"),
@@ -183,7 +189,7 @@ if st.session_state.resultado:
         "copy": resultado.get("copy"),
         "revisao": resultado.get("revisao"),
         "social": resultado.get("social"),
-        "tokens_usados": resultado["tokens_usados"]
+        "tokens_usados": resultado.get("tokens_usados", 0)
     }
 
     json_data = json.dumps(campanha, indent=2, ensure_ascii=False)
@@ -195,7 +201,9 @@ if st.session_state.resultado:
         mime="application/json"
     )
 
-    # PDF
+    # -----------------------------
+    # Exportar PDF
+    # -----------------------------
     if conteudo_final:
 
         pdf = gerar_pdf(conteudo_final)
@@ -207,7 +215,10 @@ if st.session_state.resultado:
             mime="application/pdf"
         )
 
-    st.subheader("📋 Copiar conteúdo")
+    # -----------------------------
+    # Copiar conteúdo
+    # -----------------------------
+    st.subheader("📋 Copiar conteúdo da campanha")
 
     st.text_area(
         "Copie o conteúdo abaixo",
