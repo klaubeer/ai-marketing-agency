@@ -6,23 +6,33 @@ def agente_social_media(estado: EstadoCampanha):
 
     print("\n📱 [Social Media] Otimizando conteúdo...")
 
-    copy = estado["copy"]["conteudo"]
+    # usa revisão do diretor criativo se existir
+    conteudo_base = estado.get("revisao", {}).get(
+        "conteudo",
+        estado.get("copy", {}).get("conteudo", "")
+    )
 
     prompt = f"""
 Você é especialista em social media.
 
-Conteúdo:
-{copy}
+Conteúdo da campanha:
+{conteudo_base}
+
+Crie conteúdo otimizado para redes sociais.
 
 Gere:
 
-1. hashtags
-2. ideias de posts instagram
-3. hooks para reels
-
-Limites:
+### Hashtags
 - máximo 5 hashtags
+- relevantes para marketing digital
 
+### Ideias de posts para Instagram
+- até 5 ideias
+- inclua descrição curta
+
+### Hooks para Reels
+- até 5 frases curtas
+- foco em engajamento
 """
 
     resposta = llm.invoke(prompt)
