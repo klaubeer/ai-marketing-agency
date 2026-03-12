@@ -1,4 +1,3 @@
-
 from langchain_openai import ChatOpenAI
 from orquestrador.estado_campanha import EstadoCampanha
 
