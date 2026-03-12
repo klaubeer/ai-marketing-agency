@@ -26,7 +26,12 @@ Crie:
 2. Legendas para redes sociais
 3. Texto de anúncio (ad copy)
 
-Seja criativo e persuasivo.
+Seja criativo e persuasivo, mas responda de forma objetiva.
+
+Limites:
+- máximo 5 tópicos por seção
+- frases curtas
+- evite textos longos
 """
 
     resposta = llm.invoke(prompt)
