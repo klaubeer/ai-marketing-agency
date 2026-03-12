@@ -28,10 +28,10 @@ Gere:
 
 ### Ideias de posts para Instagram
 - até 5 ideias
-- inclua descrição curta
+- inclua descrição 
 
 ### Hooks para Reels
-- até 5 frases curtas
+- até 5 frases 
 - foco em engajamento
 """
 
