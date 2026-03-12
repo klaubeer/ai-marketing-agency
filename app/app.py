@@ -19,9 +19,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 def gerar_pdf(texto):
 
     buffer = io.BytesIO()
-
     styles = getSampleStyleSheet()
-
     doc = SimpleDocTemplate(buffer)
 
     elementos = []
@@ -41,15 +39,15 @@ def gerar_pdf(texto):
 # Configuração da página
 # -----------------------------
 st.set_page_config(
-    page_title="Agência de Marketing IA",
+    page_title="AI Marketing Agency",
     page_icon="🚀",
     layout="centered"
 )
 
-st.title("🚀 Agência de Marketing com IA")
+st.title("🚀 AI Marketing Agency")
 
 st.write(
-    "Sistema multi-agente que gera campanhas de marketing automaticamente."
+    "Multi-agent system that automatically generates marketing campaigns."
 )
 
 st.divider()
@@ -69,18 +67,18 @@ if "produto" not in st.session_state:
 # Input do usuário
 # -----------------------------
 produto = st.text_input(
-    "Digite o produto ou serviço",
-    placeholder="Ex: teclado gamer"
+    "Product or service",
+    placeholder="Ex: gaming keyboard"
 )
 
 
 # -----------------------------
 # Gerar campanha
 # -----------------------------
-if st.button("Gerar campanha"):
+if st.button("Generate campaign"):
 
     if not produto:
-        st.warning("Digite um produto.")
+        st.warning("Enter a product.")
         st.stop()
 
     st.session_state.produto = produto
@@ -97,38 +95,39 @@ if st.button("Gerar campanha"):
 
     grafo = construir_grafo()
 
-    log_container = st.empty()
-
     logs = []
 
     resultado_final = {}
 
-    with st.spinner("🤖 Agentes trabalhando..."):
+    with st.spinner("🤖 AI agents working..."):
 
-        for passo in grafo.stream(estado_inicial):
+        with st.expander("Agent logs", expanded=False):
 
-            node = list(passo.keys())[0]
-            dados = passo[node]
+            log_container = st.empty()
 
-            if node == "pesquisa":
-                logs.append("🔎 Agente Pesquisa analisando mercado...")
+            for passo in grafo.stream(estado_inicial):
 
-            elif node == "estrategia":
-                logs.append("📊 Agente Estratégia criando estratégia...")
+                node = list(passo.keys())[0]
+                dados = passo[node]
 
-            elif node == "copywriter":
-                logs.append("✍️ Copywriter gerando conteúdo...")
+                if node == "pesquisa":
+                    logs.append("🔎 Research agent analyzing market...")
 
-            elif node == "diretor_criativo":
-                logs.append("🎨 Diretor Criativo revisando campanha...")
+                elif node == "estrategia":
+                    logs.append("📊 Strategy agent creating campaign strategy...")
 
-            elif node == "social":
-                logs.append("📱 Social Media otimizando conteúdo...")
+                elif node == "copywriter":
+                    logs.append("✍️ Copywriter generating content...")
 
-            log_container.markdown("\n".join(logs))
+                elif node == "diretor_criativo":
+                    logs.append("🎨 Creative director reviewing campaign...")
 
-            # acumula o estado completo
-            resultado_final.update(dados)
+                elif node == "social":
+                    logs.append("📱 Social media agent optimizing content...")
+
+                log_container.markdown("\n".join(logs))
+
+                resultado_final.update(dados)
 
     st.session_state.resultado = resultado_final
 
@@ -140,47 +139,46 @@ if st.session_state.resultado:
 
     resultado = st.session_state.resultado
 
-    st.success("✅ Campanha gerada")
-
-    st.divider()
-
-    st.header("🧠 Pesquisa de Mercado")
-    st.markdown(resultado.get("pesquisa", {}).get("conteudo", ""))
-
-    st.divider()
-
-    st.header("📊 Estratégia da Campanha")
-    st.markdown(resultado.get("estrategia", {}).get("conteudo", ""))
-
-    st.divider()
-
-    st.header("✍️ Conteúdo Criado")
-    st.markdown(resultado.get("copy", {}).get("conteudo", ""))
-
-    st.divider()
-
-    st.header("🎨 Revisão Criativa")
-    st.markdown(resultado.get("revisao", {}).get("conteudo", ""))
-
-    st.divider()
-
-    st.header("📱 Conteúdo Final para Redes Sociais")
-
-    conteudo_final = resultado.get("social", {}).get("conteudo", "")
-
-    st.markdown(conteudo_final)
-
-    st.divider()
+    st.success("Campaign generated successfully")
 
     st.metric(
-        "Tokens utilizados",
+        "Tokens used",
         resultado.get("tokens_usados", 0)
     )
 
     st.divider()
 
     # -----------------------------
-    # Exportar JSON
+    # Tabs (mobile friendly)
+    # -----------------------------
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "Research",
+        "Strategy",
+        "Copy",
+        "Creative Review",
+        "Social Media"
+    ])
+
+    with tab1:
+        st.markdown(resultado.get("pesquisa", {}).get("conteudo", ""))
+
+    with tab2:
+        st.markdown(resultado.get("estrategia", {}).get("conteudo", ""))
+
+    with tab3:
+        st.markdown(resultado.get("copy", {}).get("conteudo", ""))
+
+    with tab4:
+        st.markdown(resultado.get("revisao", {}).get("conteudo", ""))
+
+    with tab5:
+        conteudo_final = resultado.get("social", {}).get("conteudo", "")
+        st.markdown(conteudo_final)
+
+    st.divider()
+
+    # -----------------------------
+    # Preparar exportação
     # -----------------------------
     campanha = {
         "produto": st.session_state.produto,
@@ -194,34 +192,44 @@ if st.session_state.resultado:
 
     json_data = json.dumps(campanha, indent=2, ensure_ascii=False)
 
-    st.download_button(
-        "⬇️ Baixar campanha em JSON",
-        data=json_data,
-        file_name="campanha_marketing.json",
-        mime="application/json"
-    )
+    pdf = None
 
-    # -----------------------------
-    # Exportar PDF
-    # -----------------------------
     if conteudo_final:
-
         pdf = gerar_pdf(conteudo_final)
 
+    # -----------------------------
+    # Botões exportação
+    # -----------------------------
+    st.subheader("Export campaign")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
         st.download_button(
-            "📄 Baixar campanha em PDF",
-            data=pdf,
-            file_name="campanha_marketing.pdf",
-            mime="application/pdf"
+            "⬇️ Download JSON",
+            data=json_data,
+            file_name="marketing_campaign.json",
+            mime="application/json"
         )
+
+    with col2:
+        if pdf:
+            st.download_button(
+                "📄 Download PDF",
+                data=pdf,
+                file_name="marketing_campaign.pdf",
+                mime="application/pdf"
+            )
+
+    st.divider()
 
     # -----------------------------
     # Copiar conteúdo
     # -----------------------------
-    st.subheader("📋 Copiar conteúdo da campanha")
+    st.subheader("Copy campaign content")
 
     st.text_area(
-        "Copie o conteúdo abaixo",
+        "Campaign text",
         conteudo_final,
-        height=300
+        height=250
     )
