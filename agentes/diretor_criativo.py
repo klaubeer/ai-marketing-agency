@@ -8,12 +8,18 @@ def diretor_criativo(estado):
     conteudo = estado["copy"]["conteudo"]
 
     prompt = f"""
-Você é Diretor Criativo de uma agência de publicidade.
+Você é Diretor Criativo de uma agência.
 
-Analise o conteúdo abaixo.
+Revise e MELHORE o conteúdo abaixo.
 
-1) Dê uma nota de qualidade de 0 a 10
-2) Melhore o conteúdo mantendo a estrutura
+REGRAS IMPORTANTES:
+
+- NÃO resuma
+- NÃO reduza seções
+- NÃO corte ideias
+- apenas melhore linguagem, impacto e criatividade
+
+Se possível EXPANDA o conteúdo com mais exemplos ou detalhes.
 
 Conteúdo:
 {conteudo}
