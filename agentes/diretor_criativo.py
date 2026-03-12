@@ -5,27 +5,23 @@ def diretor_criativo(estado):
 
     print("\n🎨 [Diretor Criativo] Revisando campanha...")
 
-    conteudo = estado["conteudo"]
+    conteudo = estado["copy"]["conteudo"]
 
     prompt = f"""
 Você é um Diretor Criativo de uma grande agência de publicidade.
 
-Sua tarefa é revisar e melhorar o conteúdo de marketing criado por um copywriter.
+Revise e melhore o conteúdo de marketing abaixo.
 
 Analise:
+- clareza
+- criatividade
+- impacto
+- persuasão
 
-- Clareza da mensagem
-- Força persuasiva
-- Criatividade
-- Adequação ao público
-- Impacto de marketing
+Melhore o conteúdo mantendo a estrutura.
 
-Se necessário, reescreva e melhore o conteúdo.
-
-Conteúdo da campanha:
+Conteúdo:
 {conteudo}
-
-Retorne a versão aprimorada da campanha.
 """
 
     resposta = llm.invoke(prompt)
@@ -36,7 +32,10 @@ Retorne a versão aprimorada da campanha.
 
     print(f"✅ Campanha aprimorada | tokens usados: {tokens}")
 
-    estado["conteudo"] = conteudo_revisado
-    estado["tokens_totais"] += tokens
+    estado["revisao"] = {
+        "conteudo": conteudo_revisado
+    }
+
+    estado["tokens_usados"] += tokens
 
     return estado
