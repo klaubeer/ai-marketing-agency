@@ -1,44 +1,40 @@
-from langchain_openai import ChatOpenAI
 from orquestrador.estado_campanha import EstadoCampanha
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    temperature=0.7
-)
+from orquestrador.config_llm import llm
 
 
 def agente_pesquisa(estado: EstadoCampanha):
 
-    print("\n🔎 [Agente Pesquisa] Iniciando análise de mercado...")
+    print("\n🔎 [Agente Pesquisa] Analisando mercado...")
 
     produto = estado["produto"]
 
     prompt = f"""
-Você é um especialista em pesquisa de mercado.
+Você é especialista em pesquisa de mercado.
 
-Analise o mercado para o seguinte produto:
-
+Produto:
 {produto}
 
 Forneça:
 
-1. Insights de mercado
-2. Principais concorrentes
-3. Tendências do setor
+1. insights de mercado
+2. concorrentes
+3. tendências
 
-Responda de forma estruturada e clara.
 Limites:
-- máximo 5 tópicos por seção
+- máximo 5 tópicos
 - frases curtas
-- evite textos longos
 """
 
     resposta = llm.invoke(prompt)
+
+    tokens = resposta.response_metadata["token_usage"]["total_tokens"]
+
+    estado["tokens_usados"] += tokens
 
     estado["pesquisa"] = {
         "analise": resposta.content
     }
 
-    print("✅ [Agente Pesquisa] Pesquisa concluída")
+    print(f"✅ Pesquisa concluída | tokens usados: {tokens}")
 
     return estado
