@@ -22,7 +22,7 @@ Forneça uma análise estruturada contendo:
 4. Perfil do consumidor
 5. Oportunidades de marketing
 
-Seja claro e objetivo.
+Seja claro e objetivo, não tão longo.
 """
 
     resposta = llm.invoke(prompt)
