@@ -7,27 +7,26 @@ def agente_estrategia(estado: EstadoCampanha):
     print("\n📊 [Agente Estratégia] Criando estratégia...")
 
     produto = estado["produto"]
-    pesquisa = estado["pesquisa"]["analise"]
+
+    pesquisa = estado.get("pesquisa", {}).get("conteudo", "")
 
     prompt = f"""
-Você é estrategista de marketing.
+Você é um estrategista de marketing.
 
 Produto:
 {produto}
 
-Pesquisa:
+Pesquisa de mercado:
 {pesquisa}
 
-Crie:
+Crie uma estratégia contendo:
 
-1. público alvo
-2. posicionamento
-3. ângulo da campanha
-4. canais de marketing
+1. Público-alvo
+2. Posicionamento da marca
+3. Ângulo da campanha
+4. Canais de marketing recomendados
 
-Limites:
-- máximo 4 tópicos
-
+Seja claro e objetivo.
 """
 
     resposta = llm.invoke(prompt)
@@ -37,7 +36,7 @@ Limites:
     estado["tokens_usados"] += tokens
 
     estado["estrategia"] = {
-        "plano": resposta.content
+        "conteudo": resposta.content
     }
 
     print(f"✅ Estratégia definida | tokens usados: {tokens}")
