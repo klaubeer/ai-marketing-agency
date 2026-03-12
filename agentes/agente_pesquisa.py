@@ -9,20 +9,20 @@ def agente_pesquisa(estado: EstadoCampanha):
     produto = estado["produto"]
 
     prompt = f"""
-Você é especialista em pesquisa de mercado.
+Você é um especialista em pesquisa de mercado.
 
 Produto:
 {produto}
 
-Forneça:
+Forneça uma análise estruturada contendo:
 
-1. insights de mercado
-2. concorrentes
-3. tendências
+1. Insights de mercado
+2. Principais concorrentes
+3. Tendências do setor
+4. Perfil do consumidor
+5. Oportunidades de marketing
 
-Limites:
-- máximo 5 tópicos
-
+Seja claro e objetivo.
 """
 
     resposta = llm.invoke(prompt)
@@ -31,8 +31,9 @@ Limites:
 
     estado["tokens_usados"] += tokens
 
+    # formato padrão esperado pelo frontend
     estado["pesquisa"] = {
-        "analise": resposta.content
+        "conteudo": resposta.content
     }
 
     print(f"✅ Pesquisa concluída | tokens usados: {tokens}")
