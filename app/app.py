@@ -1,8 +1,6 @@
 import sys
 import os
-import time
 
-# permite importar módulos da raiz do projeto
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import streamlit as st
@@ -16,9 +14,7 @@ st.set_page_config(
 )
 
 st.title("🚀 Agência de Marketing com IA")
-st.write(
-    "Sistema multi-agente que gera campanhas de marketing automaticamente."
-)
+st.write("Sistema multi-agente que gera campanhas automaticamente.")
 
 st.divider()
 
@@ -30,7 +26,7 @@ produto = st.text_input(
 if st.button("Gerar campanha"):
 
     if not produto:
-        st.warning("Digite um produto primeiro.")
+        st.warning("Digite um produto.")
         st.stop()
 
     estado_inicial = {
@@ -45,68 +41,46 @@ if st.button("Gerar campanha"):
 
     grafo = construir_grafo()
 
-    status = st.empty()
+    st.subheader("⚙️ Execução dos agentes")
 
-    # simula execução dos agentes
-    status.write("🔎 **Agente Pesquisa** analisando mercado...")
-    time.sleep(1)
+    log_container = st.empty()
 
-    status.write("📊 **Agente Estratégia** criando estratégia...")
-    time.sleep(1)
+    logs = []
 
-    status.write("✍️ **Copywriter** gerando conteúdo...")
-    time.sleep(1)
+    resultado_final = None
 
-    status.write("🎨 **Diretor Criativo** revisando campanha...")
-    time.sleep(1)
+    for passo in grafo.stream(estado_inicial):
 
-    status.write("📱 **Social Media** otimizando conteúdo...")
-    time.sleep(1)
+        node = list(passo.keys())[0]
 
-    with st.spinner("Executando agentes..."):
+        if node == "pesquisa":
+            logs.append("🔎 **Agente Pesquisa** analisando mercado...")
 
-        resultado = grafo.invoke(estado_inicial)
+        elif node == "estrategia":
+            logs.append("📊 **Agente Estratégia** criando estratégia...")
 
-    status.success("✅ Campanha gerada com sucesso!")
+        elif node == "copywriter":
+            logs.append("✍️ **Copywriter** gerando conteúdo...")
 
-    st.divider()
+        elif node == "diretor_criativo":
+            logs.append("🎨 **Diretor Criativo** revisando campanha...")
 
-    st.header("🧠 Pesquisa de Mercado")
+        elif node == "social":
+            logs.append("📱 **Social Media** otimizando conteúdo...")
 
-    if resultado.get("pesquisa"):
-        st.markdown(resultado["pesquisa"].get("conteudo", ""))
+        log_container.markdown("\n".join(logs))
 
-    st.divider()
+        resultado_final = passo[node]
 
-    st.header("📊 Estratégia da Campanha")
-
-    if resultado.get("estrategia"):
-        st.markdown(resultado["estrategia"].get("conteudo", ""))
+    st.success("✅ Campanha gerada")
 
     st.divider()
 
-    st.header("✍️ Conteúdo Criado")
+    st.header("📱 Conteúdo Final")
 
-    if resultado.get("copy"):
-        st.markdown(resultado["copy"].get("conteudo", ""))
-
-    st.divider()
-
-    st.header("🎨 Revisão do Diretor Criativo")
-
-    if resultado.get("revisao"):
-        st.markdown(resultado["revisao"].get("conteudo", ""))
-
-    st.divider()
-
-    st.header("📱 Conteúdo Final para Redes Sociais")
-
-    if resultado.get("social"):
-        st.markdown(resultado["social"].get("conteudo", ""))
-
-    st.divider()
+    st.markdown(resultado_final["social"]["conteudo"])
 
     st.metric(
-        label="Tokens utilizados",
-        value=resultado["tokens_usados"]
+        "Tokens utilizados",
+        resultado_final["tokens_usados"]
     )
