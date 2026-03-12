@@ -20,8 +20,11 @@ Crie:
 2. legendas
 3. ad copy 
 
-Limites:
-- não muito longo nem muito curto
+Gere pelo menos:
+
+3 ideias de posts
+3 legendas completas
+2 textos de anúncio
 """
 
     resposta = llm.invoke(prompt)
