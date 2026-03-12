@@ -26,7 +26,7 @@ Crie uma estratégia contendo:
 3. Ângulo da campanha
 4. Canais de marketing recomendados
 
-Seja claro e objetivo.
+Seja claro e objetivo, não muito longo.
 """
 
     resposta = llm.invoke(prompt)
