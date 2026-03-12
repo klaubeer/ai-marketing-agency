@@ -9,20 +9,24 @@ llm = ChatOpenAI(
 
 def agente_social_media(estado: EstadoCampanha):
 
+    print("\n📱 [Social Media] Adaptando conteúdo para redes sociais...")
+
     copy = estado["copy"]["conteudo"]
 
     prompt = f"""
 Você é um especialista em social media.
 
-Conteúdo gerado:
+Com base no conteúdo abaixo:
 
 {copy}
 
-Otimize para redes sociais e gere:
+Gere:
 
-1. Hashtags
+1. Hashtags relevantes
 2. Sugestões de posts para Instagram
-3. Hooks para TikTok
+3. Hooks curtos para TikTok ou Reels
+
+Foque em engajamento.
 """
 
     resposta = llm.invoke(prompt)
@@ -30,5 +34,7 @@ Otimize para redes sociais e gere:
     estado["social"] = {
         "conteudo": resposta.content
     }
+
+    print("✅ [Social Media] Conteúdo otimizado para redes sociais")
 
     return estado
