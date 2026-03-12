@@ -1,45 +1,39 @@
-from langchain_openai import ChatOpenAI
 from orquestrador.estado_campanha import EstadoCampanha
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    temperature=0.7
-)
+from orquestrador.config_llm import llm
 
 
 def agente_copywriter(estado: EstadoCampanha):
 
-    print("\n✍️ [Copywriter] Criando conteúdo da campanha...")
+    print("\n✍️ [Copywriter] Gerando conteúdo...")
 
     estrategia = estado["estrategia"]["plano"]
 
     prompt = f"""
-Você é um copywriter profissional de marketing.
+Você é um copywriter profissional.
 
-Com base na seguinte estratégia de campanha:
-
+Estratégia:
 {estrategia}
 
 Crie:
 
 1. 3 ideias de posts
-2. Legendas para redes sociais
-3. Texto de anúncio (ad copy)
-
-Seja criativo e persuasivo, mas responda de forma objetiva.
+2. legendas
+3. ad copy curto
 
 Limites:
-- máximo 5 tópicos por seção
-- frases curtas
-- evite textos longos
+- máximo 2 frases por item
 """
 
     resposta = llm.invoke(prompt)
+
+    tokens = resposta.response_metadata["token_usage"]["total_tokens"]
+
+    estado["tokens_usados"] += tokens
 
     estado["copy"] = {
         "conteudo": resposta.content
     }
 
-    print("✅ [Copywriter] Conteúdo criado")
+    print(f"✅ Conteúdo criado | tokens usados: {tokens}")
 
     return estado
