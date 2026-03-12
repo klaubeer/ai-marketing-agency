@@ -6,25 +6,26 @@ def agente_copywriter(estado: EstadoCampanha):
 
     print("\n✍️ [Copywriter] Gerando conteúdo...")
 
-    estrategia = estado["estrategia"]["plano"]
+    estrategia = estado.get("estrategia", {}).get("conteudo", "")
 
     prompt = f"""
-Você é um copywriter profissional.
+Você é um copywriter profissional especializado em marketing digital.
 
-Estratégia:
+Estratégia da campanha:
 {estrategia}
 
-Crie:
+Crie conteúdo de marketing contendo:
 
-1. 3 ideias de posts
-2. legendas
-3. ad copy 
+1. Ideias de posts
+- pelo menos 3 ideias
 
-Gere pelo menos:
+2. Legendas para redes sociais
+- pelo menos 3 legendas completas
 
-3 ideias de posts
-3 legendas completas
-2 textos de anúncio
+3. Textos de anúncio
+- pelo menos 2 ad copies
+
+Seja criativo e persuasivo.
 """
 
     resposta = llm.invoke(prompt)
