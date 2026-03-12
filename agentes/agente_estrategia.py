@@ -31,6 +31,11 @@ Crie uma estratégia de campanha contendo:
 4. Canais de marketing recomendados
 
 Explique de forma clara e objetiva.
+
+Limites:
+- máximo 5 tópicos por seção
+- frases curtas
+- evite textos longos
 """
 
     resposta = llm.invoke(prompt)
