@@ -27,7 +27,7 @@ Crie:
 
 Limites:
 - máximo 4 tópicos
-- respostas objetivas
+
 """
 
     resposta = llm.invoke(prompt)
