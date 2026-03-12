@@ -15,7 +15,7 @@ O projeto foi desenvolvido para demonstrar **orquestração de agentes, delegaç
 Exemplo de entrada
 
 ```
-Create a marketing campaign for a new fitness smartwatch
+Crie uma campanha de marketing para o lançamento de um smartwatch fitness.
 ```
 
 Exemplo de saída
