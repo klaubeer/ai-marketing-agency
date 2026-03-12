@@ -6,32 +6,34 @@ def agente_social_media(estado: EstadoCampanha):
 
     print("\n📱 [Social Media] Otimizando conteúdo...")
 
-    # usa revisão do diretor criativo se existir
+    # usa revisão do diretor criativo se existir, senão usa o copy
     conteudo_base = estado.get("revisao", {}).get(
         "conteudo",
         estado.get("copy", {}).get("conteudo", "")
     )
 
-    prompt = f"""
-Você é especialista em social media.
+    if not conteudo_base:
+        conteudo_base = "Campanha de marketing para o produto informado."
 
-Conteúdo da campanha:
+    prompt = f"""
+Você é especialista em social media marketing.
+
+Base da campanha:
 {conteudo_base}
 
 Crie conteúdo otimizado para redes sociais.
 
 Gere:
 
-### Hashtags
+1. Hashtags
 - máximo 5 hashtags
-- relevantes para marketing digital
 
-### Ideias de posts para Instagram
+2. Ideias de posts para Instagram
 - até 5 ideias
-- inclua descrição 
+- inclua uma breve descrição
 
-### Hooks para Reels
-- até 5 frases 
+3. Hooks para Reels
+- até 5 frases curtas
 - foco em engajamento
 """
 
