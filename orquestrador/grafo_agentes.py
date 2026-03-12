@@ -1,5 +1,6 @@
 from langgraph.graph import StateGraph
 from orquestrador.estado_campanha import EstadoCampanha
+from agentes.diretor_criativo import diretor_criativo
 
 from agentes.agente_pesquisa import agente_pesquisa
 from agentes.agente_estrategia import agente_estrategia
