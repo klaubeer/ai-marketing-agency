@@ -22,7 +22,7 @@ Gere:
 
 Limites:
 - máximo 5 hashtags
-- frases curtas
+
 """
 
     resposta = llm.invoke(prompt)
