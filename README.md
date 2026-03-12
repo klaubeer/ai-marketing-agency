@@ -1,5 +1,5 @@
-Acesse em: https://agencia-mkt-ia.streamlit.app/
-Available in: https://agencia-mkt-ia.streamlit.app/
+Live Demo  
+https://agencia-mkt-ia.streamlit.app/
 
 # AI Marketing Agency — Multi-Agent Marketing System
 
