@@ -1,49 +1,45 @@
-from langchain_openai import ChatOpenAI
 from orquestrador.estado_campanha import EstadoCampanha
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    temperature=0.7
-)
+from orquestrador.config_llm import llm
 
 
 def agente_estrategia(estado: EstadoCampanha):
 
-    print("\n📊 [Agente Estratégia] Desenvolvendo estratégia da campanha...")
+    print("\n📊 [Agente Estratégia] Criando estratégia...")
 
     produto = estado["produto"]
     pesquisa = estado["pesquisa"]["analise"]
 
     prompt = f"""
-Você é um estrategista de marketing.
+Você é estrategista de marketing.
 
 Produto:
 {produto}
 
-Pesquisa de mercado:
+Pesquisa:
 {pesquisa}
 
-Crie uma estratégia de campanha contendo:
+Crie:
 
-1. Público-alvo
-2. Posicionamento da marca
-3. Ângulo da campanha
-4. Canais de marketing recomendados
-
-Explique de forma clara e objetiva.
+1. público alvo
+2. posicionamento
+3. ângulo da campanha
+4. canais de marketing
 
 Limites:
-- máximo 5 tópicos por seção
-- frases curtas
-- evite textos longos
+- máximo 4 tópicos
+- respostas objetivas
 """
 
     resposta = llm.invoke(prompt)
+
+    tokens = resposta.response_metadata["token_usage"]["total_tokens"]
+
+    estado["tokens_usados"] += tokens
 
     estado["estrategia"] = {
         "plano": resposta.content
     }
 
-    print("✅ [Agente Estratégia] Estratégia definida")
+    print(f"✅ Estratégia definida | tokens usados: {tokens}")
 
     return estado
