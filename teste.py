@@ -6,33 +6,28 @@ from orquestrador.grafo_agentes import construir_grafo
 
 def main():
 
-    print("\n🚀 Iniciando sistema de agência de marketing com IA...\n")
+    print("\n🚀 Sistema de Agência de Marketing IA\n")
 
-    grafo = construir_grafo()
+    produto = input("Digite o produto da campanha: ")
 
     estado_inicial = {
-        "produto": "smartwatch fitness",
+        "produto": produto,
         "pesquisa": {},
         "estrategia": {},
         "copy": {},
-        "social": {}
+        "social": {},
+        "tokens_usados": 0
     }
+
+    grafo = construir_grafo()
 
     resultado = grafo.invoke(estado_inicial)
 
-    print("\n📢 RESULTADO FINAL DA CAMPANHA\n")
+    print("\n📢 CAMPANHA FINAL\n")
 
-    print("🧠 Pesquisa de mercado:\n")
-    print(resultado["pesquisa"]["analise"])
-
-    print("\n📊 Estratégia da campanha:\n")
-    print(resultado["estrategia"]["plano"])
-
-    print("\n✍️ Conteúdo da campanha:\n")
-    print(resultado["copy"]["conteudo"])
-
-    print("\n📱 Otimização para redes sociais:\n")
     print(resultado["social"]["conteudo"])
+
+    print("\n💰 Tokens totais usados:", resultado["tokens_usados"])
 
 
 if __name__ == "__main__":
