@@ -18,10 +18,10 @@ Crie:
 
 1. 3 ideias de posts
 2. legendas
-3. ad copy curto
+3. ad copy 
 
 Limites:
-- máximo 2 frases por item
+- não muito longo nem muito curto
 """
 
     resposta = llm.invoke(prompt)
