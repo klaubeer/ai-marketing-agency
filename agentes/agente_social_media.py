@@ -27,6 +27,11 @@ Gere:
 3. Hooks curtos para TikTok ou Reels
 
 Foque em engajamento.
+
+Limites:
+- máximo 5 tópicos por seção
+- frases curtas
+- evite textos longos
 """
 
     resposta = llm.invoke(prompt)
