@@ -22,7 +22,7 @@ Forneça:
 
 Limites:
 - máximo 5 tópicos
-- frases curtas
+
 """
 
     resposta = llm.invoke(prompt)
