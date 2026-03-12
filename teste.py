@@ -1,9 +1,10 @@
-from orquestrador.grafo_agentes import construir_grafo
+from dotenv import load_dotenv
+load_dotenv()
 
-grafo = construir_grafo()
+from langchain_openai import ChatOpenAI
 
-resultado = grafo.invoke({
-    "produto": "smartwatch fitness"
-})
+llm = ChatOpenAI(model="gpt-4o-mini")
 
-print(resultado)
+resposta = llm.invoke("Diga olá em português")
+
+print(resposta.content)
