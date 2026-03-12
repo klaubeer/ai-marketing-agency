@@ -27,6 +27,10 @@ Forneça:
 3. Tendências do setor
 
 Responda de forma estruturada e clara.
+Limites:
+- máximo 5 tópicos por seção
+- frases curtas
+- evite textos longos
 """
 
     resposta = llm.invoke(prompt)
