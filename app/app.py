@@ -47,7 +47,7 @@ st.set_page_config(
 st.title("🚀 Agência de Marketing com IA")
 
 st.write(
-    "Sistema multi-agente que gera campanhas completas de marketing automaticamente."
+    "Sistema multi-agente que gera campanhas de marketing automaticamente."
 )
 
 st.divider()
