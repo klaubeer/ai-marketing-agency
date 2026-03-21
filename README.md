@@ -12,7 +12,7 @@ O projeto foi construído como um case funcional de **orquestração de agentes 
 
 ---
 
-## Demo
+## Demo: https://agencia-mkt-ia.streamlit.app/
 
 Entrada
 
