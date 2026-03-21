@@ -1,8 +1,10 @@
 langchain
 langchain-openai
+langchain-community
 langgraph
 openai
 python-dotenv
 pydantic
 streamlit
 reportlab
+duckduckgo-search

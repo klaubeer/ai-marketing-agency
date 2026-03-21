@@ -6,7 +6,6 @@ def agente_social_media(estado: EstadoCampanha):
 
     print("\n📱 [Social Media] Otimizando conteúdo...")
 
-    # usa revisão do diretor criativo se existir, senão usa o copy
     conteudo_base = estado.get("revisao", {}).get(
         "conteudo",
         estado.get("copy", {}).get("conteudo", "")
@@ -41,12 +40,9 @@ Gere:
 
     tokens = resposta.response_metadata["token_usage"]["total_tokens"]
 
-    estado["tokens_usados"] += tokens
-
-    estado["social"] = {
-        "conteudo": resposta.content
-    }
-
     print(f"✅ Conteúdo otimizado | tokens usados: {tokens}")
 
-    return estado
+    return {
+        "social": {"conteudo": resposta.content},
+        "tokens_usados": estado["tokens_usados"] + tokens,
+    }

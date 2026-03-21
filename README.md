@@ -1,330 +1,185 @@
-Live Demo  
-https://agencia-mkt-ia.streamlit.app/
+# AI Marketing Agency
 
-# AI Marketing Agency — Multi-Agent Marketing System
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-latest-blueviolet)](https://github.com/langchain-ai/langgraph)
+[![LangChain](https://img.shields.io/badge/LangChain-latest-green)](https://github.com/langchain-ai/langchain)
+[![Streamlit](https://img.shields.io/badge/Streamlit-app-red?logo=streamlit)](https://agencia-mkt-ia.streamlit.app/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-agencia--mkt--ia.streamlit.app-brightgreen)](https://agencia-mkt-ia.streamlit.app/)
 
-Sistema multi-agente que simula uma agência de marketing utilizando agentes de IA para gerar campanhas completas automaticamente.
+Sistema multi-agente que simula uma agência de marketing completa. A partir de um produto ou serviço, o sistema orquestra cinco agentes especializados — pesquisa, estratégia, copywriting, revisão criativa e social media — para gerar uma campanha estruturada automaticamente.
 
-O sistema divide uma solicitação de marketing em tarefas executadas por diferentes agentes especializados, como pesquisa de mercado, estratégia, copywriting e adaptação para redes sociais.
-
-O projeto foi desenvolvido para demonstrar **orquestração de agentes, workflows estruturados com LLMs e pipelines de geração de conteúdo com IA.**
-
----
-
-# Demo
-
-Exemplo de entrada
-
-```
-Crie uma campanha de marketing para um teclado gamer
-```
-
-Exemplo de saída
-
-```
-Pesquisa de Mercado
-Insights sobre o mercado de periféricos gamer e tendências.
-
-Estratégia de Campanha
-Público-alvo, posicionamento e abordagem da campanha.
-
-Conteúdo de Marketing
-Ideias de posts, legendas e textos de anúncio.
-
-Conteúdo Social
-Hashtags, ideias de posts e hooks para reels.
-```
+O projeto foi construído como um case funcional de **orquestração de agentes com LangGraph e LangChain**, demonstrando estado compartilhado, busca na web em tempo real, e roteamento condicional com loop de revisão.
 
 ---
 
-# Arquitetura do Sistema
+## Demo
 
-O sistema funciona como um pipeline de agentes especializados.
-
-Cada agente executa uma tarefa e atualiza um **estado compartilhado da campanha**.
+Entrada
 
 ```
-User Input
-     │
-     ▼
-Research Agent
-     │
-     ▼
-Strategy Agent
-     │
-     ▼
-Copywriter Agent
-     │
-     ▼
-Creative Director Agent
-     │
-     ▼
-Social Media Agent
-     │
-     ▼
-Final Campaign
+teclado gamer
 ```
 
-A orquestração dos agentes é feita utilizando **LangGraph**.
+Saída (5 seções geradas automaticamente)
+
+| Seção | Conteúdo gerado |
+|---|---|
+| Pesquisa de Mercado | Análise de mercado com dados reais da web |
+| Estratégia | Público-alvo, posicionamento e canais |
+| Conteúdo | Posts, legendas e ad copies |
+| Revisão Criativa | Versão aprimorada com nota do Diretor |
+| Redes Sociais | Hashtags, ideias de post e hooks para Reels |
 
 ---
 
-# Agentes
+## Arquitetura
 
-## Research Agent
+O sistema é um grafo de agentes onde cada nó executa uma tarefa e atualiza um **estado compartilhado da campanha** (`EstadoCampanha`).
 
-Responsável por analisar o mercado e gerar insights sobre o produto.
+O ponto central da arquitetura é o **loop de revisão**: o Diretor Criativo avalia o conteúdo do Copywriter com uma nota de 0 a 10. Se a nota for menor que 7, o conteúdo retorna ao Copywriter com o feedback — até no máximo 2 ciclos.
 
-Funções
-
-* análise de mercado
-* identificação de tendências
-* identificação de público
-
-Saída
-
-```
-{
- "conteudo": "análise de mercado..."
-}
+```mermaid
+flowchart TD
+    A([User Input]) --> B[Research Agent\nbusca web + análise]
+    B --> C[Strategy Agent]
+    C --> D[Copywriter Agent]
+    D --> E[Creative Director\navalia e melhora]
+    E -->|nota >= 7 ou 2 tentativas| F[Social Media Agent]
+    E -->|nota < 7| D
+    F --> G([Campanha Final])
 ```
 
 ---
 
-## Strategy Agent
+## Agentes
 
-Cria a estratégia de marketing baseada na pesquisa.
+| Agente | Responsabilidade |
+|---|---|
+| **Research Agent** | Busca dados reais na web + análise de mercado, concorrentes e tendências |
+| **Strategy Agent** | Define público-alvo, posicionamento e canais com base na pesquisa |
+| **Copywriter Agent** | Gera posts, legendas e ad copies — reescreve se receber feedback do Diretor |
+| **Creative Director** | Revisa o conteúdo, dá uma nota de 0–10 e decide se aprova ou devolve |
+| **Social Media Agent** | Adapta o conteúdo para Instagram: hashtags, ideias de post e hooks para Reels |
 
-Funções
+---
 
-* definição de público-alvo
-* posicionamento da campanha
-* ângulo da campanha
+## Ferramentas
 
-Saída
+### `ferramentas/busca_web.py`
+
+Utiliza **DuckDuckGo Search** (via `langchain-community`) para buscar informações atuais sobre o produto antes de o LLM gerar a análise.
+
+O Research Agent chama essa ferramenta com uma query contextualizada (`"{produto} mercado tendências concorrentes"`) e injeta os resultados no prompt, fundamentando a pesquisa em dados reais em vez de depender apenas do conhecimento interno do modelo.
+
+Não requer chave de API adicional.
+
+---
+
+## Tech Stack
+
+| Componente | Função |
+|---|---|
+| **LangGraph** | Orquestração do grafo de agentes e roteamento condicional |
+| **LangChain** | Integração com LLM e ferramentas |
+| **OpenAI (gpt-4o-mini)** | Modelo de linguagem base de todos os agentes |
+| **DuckDuckGo Search** | Busca na web em tempo real para o Research Agent |
+| **Streamlit** | Interface web com streaming dos logs em tempo real |
+| **ReportLab** | Exportação da campanha em PDF |
+
+---
+
+## Estrutura do Projeto
 
 ```
-{
- "conteudo": "estratégia de marketing..."
-}
+ai-marketing-agency/
+├── agentes/
+│   ├── agente_pesquisa.py       # Research Agent (usa busca_web)
+│   ├── agente_estrategia.py     # Strategy Agent
+│   ├── agente_copywriter.py     # Copywriter Agent (aceita feedback do Diretor)
+│   ├── diretor_criativo.py      # Creative Director (avalia e dá nota)
+│   └── agente_social_media.py   # Social Media Agent
+├── ferramentas/
+│   └── busca_web.py             # DuckDuckGo search tool
+├── orquestrador/
+│   ├── grafo_agentes.py         # Grafo LangGraph + roteador condicional
+│   ├── estado_campanha.py       # TypedDict com estado compartilhado
+│   ├── config_llm.py            # Configuração do modelo (gpt-4o-mini)
+│   └── visualizar_grafo.py      # Gera PNG do grafo
+├── app/
+│   └── app.py                   # Interface Streamlit
+├── teste.py                     # Execução via CLI
+├── requirements.txt
+├── .env.example
+└── .gitignore
 ```
 
 ---
 
-## Copywriter Agent
+## Setup
 
-Responsável por gerar o conteúdo principal da campanha.
+**1. Clone o repositório**
 
-Funções
-
-* ideias de posts
-* legendas
-* textos de anúncio
-
-Saída
-
-```
-{
- "conteudo": "conteúdo da campanha..."
-}
-```
-
----
-
-## Creative Director Agent
-
-Revisa e melhora o conteúdo criado pelo copywriter.
-
-Funções
-
-* revisão criativa
-* melhoria de linguagem
-* otimização de impacto
-
-Saída
-
-```
-{
- "conteudo": "conteúdo revisado..."
-}
-```
-
----
-
-## Social Media Agent
-
-Adapta o conteúdo para redes sociais.
-
-Funções
-
-* hashtags
-* ideias de posts
-* hooks para reels
-
-Saída
-
-```
-{
- "conteudo": "conteúdo social..."
-}
-```
-
----
-
-# Arquitetura Técnica
-
-O sistema utiliza um workflow baseado em grafos onde cada agente é um nó.
-
-```
-Research → Strategy → Copywriter → Creative Director → Social Media
-```
-
-Todos os agentes compartilham um estado de campanha.
-
-Exemplo de estado
-
-```
-CampaignState
-
-produto
-pesquisa
-estrategia
-copy
-revisao
-social
-tokens_usados
-```
-
-Cada agente lê e atualiza esse estado.
-
----
-
-# Interface Web
-
-O sistema possui uma interface construída com **Streamlit**.
-
-Funcionalidades
-
-* geração de campanha a partir de um produto
-* visualização das etapas da campanha
-* logs de execução dos agentes em tempo real
-* exportação da campanha
-
-Exportação disponível
-
-* JSON
-* PDF
-* copiar conteúdo
-
----
-
-# Tech Stack
-
-Principais tecnologias utilizadas
-
-* Python
-* LangGraph
-* LangChain
-* OpenAI API
-* Streamlit
-* ReportLab
-
-Função de cada componente
-
-| Componente | Função                  |
-| ---------- | ----------------------- |
-| LangGraph  | Orquestração de agentes |
-| LangChain  | Integração com LLM      |
-| OpenAI     | Modelo de linguagem     |
-| Streamlit  | Interface web           |
-| ReportLab  | Geração de PDF          |
-
----
-
-# Estrutura do Projeto
-
-```
-ai-marketing-agency
-
-agentes/
-   agente_pesquisa.py
-   agente_estrategia.py
-   agente_copywriter.py
-   diretor_criativo.py
-   agente_social_media.py
-
-orquestrador/
-   grafo_agentes.py
-   estado_campanha.py
-   config_llm.py
-
-app/
-   app.py
-
-outputs/
-
-teste.py
-requirements.txt
-README.md
-```
-
----
-
-# Execução
-
-Clone o repositório
-
-```
+```bash
 git clone https://github.com/yourusername/ai-marketing-agency
-
 cd ai-marketing-agency
 ```
 
-Instale dependências
+**2. Crie e ative um ambiente virtual**
 
+```bash
+python -m venv venv
+source venv/bin/activate       # Linux/Mac
+venv\Scripts\activate          # Windows
 ```
+
+**3. Instale as dependências**
+
+```bash
 pip install -r requirements.txt
 ```
 
-Configure variável de ambiente
+**4. Configure a chave da API**
+
+Para rodar localmente, crie um arquivo `.env` na raiz do projeto:
 
 ```
-OPENAI_API_KEY=your_key
+OPENAI_API_KEY=your_openai_api_key_here
 ```
 
-Execute a interface
+> No Streamlit Cloud, a chave é configurada via **Secrets** (`Settings → Secrets`), sem necessidade de `.env`.
 
-```
+**5. Execute**
+
+Interface web:
+
+```bash
 streamlit run app/app.py
 ```
 
-Acesse
+CLI:
 
+```bash
+python teste.py
 ```
-http://localhost:8501
-```
+
+Acesse: `http://localhost:8501`
 
 ---
 
-# O que este projeto demonstra
+## Conceitos LangGraph demonstrados
 
-Este projeto demonstra conceitos importantes de engenharia de IA:
-
-* sistemas multi-agente
-* orquestração de agentes
-* workflows com LLM
-* pipelines de geração de conteúdo
-* estado compartilhado entre agentes
-* interfaces de demonstração para sistemas de IA
+- **StateGraph** — grafo tipado com estado compartilhado entre todos os nós
+- **Conditional edges** — roteamento dinâmico baseado na nota do Diretor Criativo
+- **Loop com limite** — o grafo pode revisitar nós (copywriter ↔ diretor) controlado por contador de tentativas
+- **Delta returns** — cada agente retorna apenas as chaves que modificou, não o estado inteiro
+- **Streaming** — `grafo.stream()` permite exibir o progresso nó a nó na UI
 
 ---
 
-# Possíveis melhorias
+## Possíveis evoluções
 
-Evoluções futuras
-
-* busca de mercado em tempo real
-* análise automática de concorrentes
-* memória entre campanhas
-* avaliação automática de campanhas
-* integração com APIs de marketing
+- Memória entre campanhas (persistência com LangGraph checkpointer)
+- Avaliação automática com métricas (LangSmith)
+- Agente de análise de concorrentes com scraping
+- Integração com APIs de agendamento de posts (Buffer, Later)
+- Human-in-the-loop: aprovar a campanha antes de finalizar

@@ -90,7 +90,10 @@ if st.button("Gerar campanha"):
         "copy": {},
         "revisao": {},
         "social": {},
-        "tokens_usados": 0
+        "nota_revisao": 0,
+        "tentativas_revisao": 0,
+        "tokens_usados": 0,
+        "historico": {},
     }
 
     grafo = construir_grafo()
@@ -109,17 +112,23 @@ if st.button("Gerar campanha"):
                 node = list(passo.keys())[0]
                 dados = passo[node]
 
+                tentativas = dados.get("tentativas_revisao", resultado_final.get("tentativas_revisao", 0))
+                nota = dados.get("nota_revisao", resultado_final.get("nota_revisao", 0))
+
                 if node == "pesquisa":
-                    logs.append("🔎 Agente de Pesquisa analisando o mercado...")
+                    logs.append("🔎 Agente de Pesquisa buscando dados na web e analisando o mercado...")
 
                 elif node == "estrategia":
                     logs.append("📊 Agente de Estratégia definindo posicionamento da campanha...")
 
                 elif node == "copywriter":
-                    logs.append("✍️ Copywriter gerando conteúdo da campanha...")
+                    if tentativas > 0:
+                        logs.append(f"✍️ Copywriter revisando conteúdo (tentativa {tentativas + 1}, nota anterior: {nota}/10)...")
+                    else:
+                        logs.append("✍️ Copywriter gerando conteúdo da campanha...")
 
                 elif node == "diretor_criativo":
-                    logs.append("🎨 Diretor Criativo revisando e melhorando a campanha...")
+                    logs.append(f"🎨 Diretor Criativo revisando campanha (revisão {tentativas + 1})...")
 
                 elif node == "social":
                     logs.append("📱 Agente de Social Media adaptando conteúdo para redes sociais...")
@@ -127,6 +136,12 @@ if st.button("Gerar campanha"):
                 log_container.markdown("\n".join(logs))
 
                 resultado_final.update(dados)
+
+    # log final com resultado da revisão
+    nota_final = resultado_final.get("nota_revisao", 0)
+    tentativas_final = resultado_final.get("tentativas_revisao", 0)
+    logs.append(f"✅ Campanha finalizada | nota criativa: {nota_final}/10 | revisões: {tentativas_final}")
+    log_container.markdown("\n".join(logs))
 
     st.session_state.resultado = resultado_final
 
@@ -140,15 +155,21 @@ if st.session_state.resultado:
 
     st.success("✅ Campanha gerada com sucesso")
 
-    st.metric(
-        "Tokens utilizados",
-        resultado.get("tokens_usados", 0)
-    )
+    col_tok, col_nota, col_rev = st.columns(3)
+
+    with col_tok:
+        st.metric("Tokens utilizados", resultado.get("tokens_usados", 0))
+
+    with col_nota:
+        st.metric("Nota criativa", f"{resultado.get('nota_revisao', 0)}/10")
+
+    with col_rev:
+        st.metric("Revisões feitas", resultado.get("tentativas_revisao", 0))
 
     st.divider()
 
     # -----------------------------
-    # Abas (melhor para mobile)
+    # Abas
     # -----------------------------
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Pesquisa de Mercado",
@@ -186,12 +207,15 @@ if st.session_state.resultado:
         "copy": resultado.get("copy"),
         "revisao": resultado.get("revisao"),
         "social": resultado.get("social"),
-        "tokens_usados": resultado.get("tokens_usados", 0)
+        "nota_revisao": resultado.get("nota_revisao", 0),
+        "tentativas_revisao": resultado.get("tentativas_revisao", 0),
+        "tokens_usados": resultado.get("tokens_usados", 0),
     }
 
     json_data = json.dumps(campanha, indent=2, ensure_ascii=False)
 
     pdf = None
+    conteudo_final = resultado.get("social", {}).get("conteudo", "")
 
     if conteudo_final:
         pdf = gerar_pdf(conteudo_final)

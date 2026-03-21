@@ -7,7 +7,6 @@ def agente_estrategia(estado: EstadoCampanha):
     print("\n📊 [Agente Estratégia] Criando estratégia...")
 
     produto = estado["produto"]
-
     pesquisa = estado.get("pesquisa", {}).get("conteudo", "")
 
     prompt = f"""
@@ -33,12 +32,9 @@ Seja claro e objetivo, não muito longo.
 
     tokens = resposta.response_metadata["token_usage"]["total_tokens"]
 
-    estado["tokens_usados"] += tokens
-
-    estado["estrategia"] = {
-        "conteudo": resposta.content
-    }
-
     print(f"✅ Estratégia definida | tokens usados: {tokens}")
 
-    return estado
+    return {
+        "estrategia": {"conteudo": resposta.content},
+        "tokens_usados": estado["tokens_usados"] + tokens,
+    }
