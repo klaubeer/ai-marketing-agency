@@ -67,7 +67,7 @@ if "produto" not in st.session_state:
 # Input do usuário
 # -----------------------------
 produto = st.text_input(
-    "Digite o produto ou serviço",
+    "Digite o produto ou serviço para qual deseja gerar uma campanha:",
     placeholder="Ex: teclado gamer"
 )
 
