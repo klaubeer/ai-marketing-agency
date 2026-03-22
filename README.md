@@ -176,10 +176,6 @@ Acesse: `http://localhost:8501`
 
 ---
 
-## Possíveis evoluções
+## Autor
 
-- Memória entre campanhas (persistência com LangGraph checkpointer)
-- Avaliação automática com métricas (LangSmith)
-- Agente de análise de concorrentes com scraping
-- Integração com APIs de agendamento de posts (Buffer, Later)
-- Human-in-the-loop: aprovar a campanha antes de finalizar
+Klauber Fischer
