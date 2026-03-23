@@ -32,6 +32,10 @@ Saída (5 seções geradas automaticamente)
 
 ---
 
+![Demonstração](mkt.gif)
+
+---
+
 ## Arquitetura
 
 O sistema é um grafo de agentes onde cada nó executa uma tarefa e atualiza um **estado compartilhado da campanha** (`EstadoCampanha`).
