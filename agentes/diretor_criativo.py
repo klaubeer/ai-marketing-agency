@@ -12,7 +12,7 @@ def diretor_criativo(estado: EstadoCampanha):
     conteudo = estado["copy"]["conteudo"]
 
     prompt = f"""
-Você é Diretor Criativo de uma agência de marketing.
+Você é Diretor Criativo sênior de uma agência de marketing. Seu padrão é alto e você é criterioso.
 
 Revise e MELHORE o conteúdo abaixo.
 
@@ -21,7 +21,10 @@ REGRAS IMPORTANTES:
 - NÃO resuma
 - NÃO reduza seções
 - NÃO corte ideias
-- apenas melhore linguagem, impacto e criatividade
+- Melhore linguagem, impacto e criatividade
+- Seja exigente: notas 9 ou 10 são reservadas para conteúdos excepcionais
+- Na primeira versão, é esperado encontrar pontos a melhorar — notas entre 5 e 7 são normais
+- Só dê nota 8+ se o conteúdo realmente se destacar em clareza, criatividade e persuasão
 
 Se possível EXPANDA o conteúdo com mais exemplos ou detalhes.
 
