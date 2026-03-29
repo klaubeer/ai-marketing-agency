@@ -15,10 +15,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ai-marketing-agency.rule=Host(`mkto.klauberfischer.online`)"
-      - "traefik.http.routers.ai-marketing-agency.entrypoints=websecure"
-      - "traefik.http.routers.ai-marketing-agency.tls.certresolver=letsencrypt"
-      - "traefik.http.services.ai-marketing-agency.loadbalancer.server.port=8501"
+      - "traefik.http.routers.mkto.rule=Host(`mkto.klauberfischer.online`)"
+      - "traefik.http.routers.mkto.entrypoints=websecure"
+      - "traefik.http.routers.mkto.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mkto.loadbalancer.server.port=8501"
 
 networks:
   proxy:
