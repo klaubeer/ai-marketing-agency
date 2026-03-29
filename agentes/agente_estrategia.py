@@ -1,5 +1,6 @@
 from orquestrador.estado_campanha import EstadoCampanha
 from orquestrador.config_llm import llm
+from orquestrador.config_sentinela import get_handler
 
 
 def agente_estrategia(estado: EstadoCampanha):
@@ -28,7 +29,7 @@ Crie uma estratégia contendo:
 Seja claro e objetivo, não muito longo.
 """
 
-    resposta = llm.invoke(prompt)
+    resposta = llm.invoke(prompt, config={"callbacks": [get_handler("estrategia")]})
 
     tokens = resposta.response_metadata["token_usage"]["total_tokens"]
 

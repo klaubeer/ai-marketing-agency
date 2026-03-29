@@ -1,5 +1,6 @@
 from orquestrador.estado_campanha import EstadoCampanha
 from orquestrador.config_llm import llm
+from orquestrador.config_sentinela import get_handler
 
 
 def agente_social_media(estado: EstadoCampanha):
@@ -36,7 +37,7 @@ Gere:
 - foco em engajamento
 """
 
-    resposta = llm.invoke(prompt)
+    resposta = llm.invoke(prompt, config={"callbacks": [get_handler("social_media")]})
 
     tokens = resposta.response_metadata["token_usage"]["total_tokens"]
 

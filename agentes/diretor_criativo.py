@@ -2,6 +2,7 @@ import re
 
 from orquestrador.estado_campanha import EstadoCampanha
 from orquestrador.config_llm import llm
+from orquestrador.config_sentinela import get_handler
 
 
 def diretor_criativo(estado: EstadoCampanha):
@@ -39,7 +40,7 @@ VERSAO_APRIMORADA:
 (conteúdo melhorado aqui)
 """
 
-    resposta = llm.invoke(prompt)
+    resposta = llm.invoke(prompt, config={"callbacks": [get_handler("diretor_criativo")]})
 
     texto = resposta.content
     tokens = resposta.response_metadata["token_usage"]["total_tokens"]

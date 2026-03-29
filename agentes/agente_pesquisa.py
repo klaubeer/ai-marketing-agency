@@ -1,5 +1,6 @@
 from orquestrador.estado_campanha import EstadoCampanha
 from orquestrador.config_llm import llm
+from orquestrador.config_sentinela import get_handler
 from ferramentas.busca_web import buscar_na_web
 
 
@@ -32,7 +33,7 @@ Com base nos dados acima, forneça uma análise estruturada contendo:
 Seja claro e objetivo, não tão longo.
 """
 
-    resposta = llm.invoke(prompt)
+    resposta = llm.invoke(prompt, config={"callbacks": [get_handler("pesquisa")]})
 
     tokens = resposta.response_metadata["token_usage"]["total_tokens"]
 
