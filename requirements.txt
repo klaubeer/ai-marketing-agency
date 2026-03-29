@@ -8,4 +8,5 @@ pydantic
 streamlit
 reportlab
 duckduckgo-search
-sentinela-ai[langchain] @ git+https://github.com/klaubeer/sentinela-ai.git#subdirectory=sdk
+httpx>=0.27
+langchain-core>=0.2
