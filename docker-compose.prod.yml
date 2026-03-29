@@ -2,18 +2,11 @@ services:
   ai-marketing-agency:
     build: .
     container_name: ai-marketing-agency
-    restart: unless-stopped
+    expose:
+      - "8501"
     env_file:
       - .env.prod
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
-    networks:
-      - rede_mkto
-      - proxy
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mkto.rule=Host(`mkto.klauberfischer.online`)"
@@ -21,9 +14,9 @@ services:
       - "traefik.http.routers.mkto.tls.certresolver=letsencrypt"
       - "traefik.http.services.mkto.loadbalancer.server.port=8501"
       - "traefik.docker.network=proxy"
+    networks:
+      - proxy
 
 networks:
-  rede_mkto:
-    driver: bridge
   proxy:
     external: true
