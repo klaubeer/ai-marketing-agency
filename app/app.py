@@ -41,8 +41,18 @@ def gerar_pdf(texto):
 st.set_page_config(
     page_title="Agência de Marketing com IA",
     page_icon="🚀",
-    layout="centered"
+    layout="wide"
 )
+
+# -----------------------------
+# Sidebar com README
+# -----------------------------
+readme_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "README.md"))
+with open(readme_path, "r", encoding="utf-8") as f:
+    readme = f.read()
+
+with st.sidebar:
+    st.markdown(readme)
 
 st.title("🚀 Agência de Marketing com IA")
 
