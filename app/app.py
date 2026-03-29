@@ -133,7 +133,7 @@ if st.button("Gerar campanha"):
                 elif node == "social":
                     logs.append("📱 Agente de Social Media adaptando conteúdo para redes sociais...")
 
-                log_container.markdown("\n".join(logs))
+                log_container.markdown("\n\n".join(logs))
 
                 resultado_final.update(dados)
 
