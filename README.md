@@ -6,7 +6,9 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-app-red?logo=streamlit)](https://agencia-mkt-ia.streamlit.app/)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-agencia--mkt--ia.streamlit.app-brightgreen)](https://agencia-mkt-ia.streamlit.app/)
 
-Sistema multi-agente que simula uma agência de marketing completa. A partir de um produto ou serviço, o sistema orquestra cinco agentes especializados — pesquisa, estratégia, copywriting, revisão criativa e social media — para gerar uma campanha estruturada automaticamente.
+Projeto de estudo que demonstra o uso de sistemas multi-agente com IA para geração de ideias de marketing. A partir de um produto ou serviço, o sistema orquestra cinco agentes especializados — pesquisa, estratégia, copywriting, revisão criativa e social media — para gerar sugestões de campanha automaticamente.
+
+> Este projeto não substitui uma agência ou profissional de marketing.
 
 O projeto foi construído como um case funcional de **orquestração de agentes com LangGraph e LangChain**, demonstrando estado compartilhado, busca na web em tempo real, e roteamento condicional com loop de revisão.
 
@@ -50,7 +52,7 @@ flowchart TD
     D --> E[Creative Director\navalia e melhora]
     E -->|nota >= 7 ou 2 tentativas| F[Social Media Agent]
     E -->|nota < 7| D
-    F --> G([Campanha Final])
+    F --> G([Sugestão de Campanha])
 ```
 
 ---
