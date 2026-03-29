@@ -14,7 +14,7 @@ O projeto foi construído como um case funcional de **orquestração de agentes 
 
 ---
 
-## Demonstração: https://agencia-mkt-ia.streamlit.app/
+## Acesse: https://mkto.klauberfischer.online/
 
 Entrada
 
@@ -34,9 +34,6 @@ Saída (5 seções geradas automaticamente)
 
 ---
 
-![Demonstração](mkt.gif)
-
----
 
 ## Arquitetura
 
@@ -91,33 +88,6 @@ Não requer chave de API adicional.
 | **DuckDuckGo Search** | Busca na web em tempo real para o Research Agent |
 | **Streamlit** | Interface web com streaming dos logs em tempo real |
 | **ReportLab** | Exportação da campanha em PDF |
-
----
-
-## Estrutura do Projeto
-
-```
-ai-marketing-agency/
-├── agentes/
-│   ├── agente_pesquisa.py       # Research Agent (usa busca_web)
-│   ├── agente_estrategia.py     # Strategy Agent
-│   ├── agente_copywriter.py     # Copywriter Agent (aceita feedback do Diretor)
-│   ├── diretor_criativo.py      # Creative Director (avalia e dá nota)
-│   └── agente_social_media.py   # Social Media Agent
-├── ferramentas/
-│   └── busca_web.py             # DuckDuckGo search tool
-├── orquestrador/
-│   ├── grafo_agentes.py         # Grafo LangGraph + roteador condicional
-│   ├── estado_campanha.py       # TypedDict com estado compartilhado
-│   ├── config_llm.py            # Configuração do modelo (gpt-4o-mini)
-│   └── visualizar_grafo.py      # Gera PNG do grafo
-├── app/
-│   └── app.py                   # Interface Streamlit
-├── teste.py                     # Execução via CLI
-├── requirements.txt
-├── .env.example
-└── .gitignore
-```
 
 ---
 
