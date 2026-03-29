@@ -46,10 +46,7 @@ st.set_page_config(
 
 st.title("🚀 Agência de Marketing com IA")
 
-st.write(
-    "Projeto de estudo que demonstra o uso de sistemas multi-agente com IA para geração de ideias de marketing. "
-    "Não substitui uma agência ou profissional de marketing."
-)
+st.write("Sistema multi-agente que gera sugestões de campanha de marketing automaticamente.")
 
 st.divider()
 
