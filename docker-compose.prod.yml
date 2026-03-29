@@ -19,6 +19,7 @@ services:
       - "traefik.http.routers.mkto.entrypoints=websecure"
       - "traefik.http.routers.mkto.tls.certresolver=letsencrypt"
       - "traefik.http.services.mkto.loadbalancer.server.port=8501"
+      - "traefik.docker.network=proxy"
 
 networks:
   proxy:
