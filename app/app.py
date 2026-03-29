@@ -47,7 +47,8 @@ st.set_page_config(
 st.title("🚀 Agência de Marketing com IA")
 
 st.write(
-    "Sistema multi-agente que gera campanhas de marketing automaticamente."
+    "Projeto de estudo que demonstra o uso de sistemas multi-agente com IA para geração de ideias de marketing. "
+    "Não substitui uma agência ou profissional de marketing."
 )
 
 st.divider()
@@ -153,7 +154,7 @@ if st.session_state.resultado:
 
     resultado = st.session_state.resultado
 
-    st.success("✅ Campanha gerada com sucesso")
+    st.success("✅ Sugestão de campanha gerada")
 
     col_tok, col_nota, col_rev = st.columns(3)
 
@@ -256,3 +257,13 @@ if st.session_state.resultado:
         conteudo_final,
         height=250
     )
+
+    st.divider()
+
+    # -----------------------------
+    # Nova campanha
+    # -----------------------------
+    if st.button("🔄 Gerar nova campanha"):
+        st.session_state.resultado = None
+        st.session_state.produto = ""
+        st.rerun()
